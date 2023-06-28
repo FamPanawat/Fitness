@@ -1,0 +1,225 @@
+﻿
+@model Fitness.Models.Officer;
+@{
+
+    IEnumerable<Sex> SexList = ViewData["SexList"] as IEnumerable<Sex>;
+    IEnumerable<Role> RoleList = ViewData["RoleList"] as IEnumerable<Role>;
+}
+
+@{
+    ViewBag.Title = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Create</h2>
+
+<form method="post" asp-action="Create" asp-controller="Officer">
+
+
+    <div class="row">
+
+        <div class="form-group col-md-6">
+            @*@Html.LabelFor(model => model.Officer_Id, new { @class = "control-label" })*@
+            <label class="font-weight-bold">รหัสเจ้าหน้าที่</label>
+            @Html.TextBoxFor(model => model.Officer_Id, new { @class = "form-control", @readonly = "readonly" })
+            @Html.ValidationMessageFor(model => model.Officer_Id, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="form-group col-md-6">
+            <label class="font-weight-bold">บทบาทหน้าที่</label>
+            <select style="width:100%" id="RoleId" name="RoleId" class="form-control">
+                @*<option value="">------เลือกบทบาทหน้าที่------</option>*@
+                @foreach (var r in RoleList)
+                {
+                    <option value="@r.RoleId">@r.RoleName</option>
+                }
+            </select>
+        </div>
+
+    </div> @*รหัสพนักงาน บทบาท*@
+
+    <div class="row">
+        <div class="form-group col-md-6">
+            <label class="font-weight-bold">ชื่อ</label>
+            @*@Html.LabelFor(model => model.Firstname, new { @class = "control-label" })*@
+            @Html.TextBoxFor(model => model.Firstname, new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.Firstname, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="form-group col-md-6">
+            <label class="font-weight-bold">นามสกุล</label>
+            @*@Html.LabelFor(model => model.Lastname, new { @class = "control-label" })*@
+            @Html.TextBoxFor(model => model.Lastname, new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.Lastname, "", new { @class = "text-danger" })
+        </div>
+    </div> @*ชื่อ-สกุล*@
+
+    <div class="row">
+        <div class="form-group col-md-6">
+            <label class="font-weight-bold">ชื่อผู้ใช้</label>
+            @Html.TextBoxFor(model => model.Username, new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.Username, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="form-group col-md-6">
+            <label class="font-weight-bold">รหัสผ่าน</label>
+            @Html.TextBoxFor(model => model.Password, new { @class = "form-control", @ValueType = "password" })
+            @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
+        </div>
+    </div> @*Username Password*@
+
+    <div class="row">
+        <div class="form-group col-md-6">
+            <label class="font-weight-bold">เพศ</label>
+            <select style="width:100%" id="SexId" name="SexId" class="form-control">
+                <option value="">------เลือก------</option>
+
+                @foreach(var s in SexList)
+                {
+                    <option value="@s.SexId">@s.SexName</option>
+                }
+
+            </select>
+        </div>
+
+        <div class="form-group col-md-6">
+            <label class="font-weight-bold">เบอร์โทรศัพท์</label>
+            @Html.TextBoxFor(model => model.Phone_number, new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.Phone_number, "", new { @class = "text-danger" })
+        </div>
+    </div> @*เบอร์โทรศัพท์ เพศ*@
+
+    <div class="form-group text-right">
+        <button type="submit" class="btn btn-primary" style="width: 80px">บันทึก</button>
+        <button type="submit" class="btn btn-danger" asp-action="Index" asp-controller="Home">ยกเลิก</button>
+    </div>
+</form>
+
+@*@using (Html.BeginForm())
+{
+    
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.Officer_Id, new { @class = "control-label" })
+        @Html.TextBoxFor(model => model.Officer_Id, new { @class = "form-control", @readonly = "readonly" })
+        @Html.ValidationMessageFor(model => model.Officer_Id, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.Firstname, new { @class = "control-label" })
+        @Html.TextBoxFor(model => model.Firstname, new { @class = "form-control" })
+        @Html.ValidationMessageFor(model => model.Firstname, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.Lastname, new { @class = "control-label" })
+        @Html.TextBoxFor(model => model.Lastname, new { @class = "form-control" })
+        @Html.ValidationMessageFor(model => model.Lastname, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.Username, new { @class = "control-label" })
+        @Html.TextBoxFor(model => model.Username, new { @class = "form-control" })
+        @Html.ValidationMessageFor(model => model.Username, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.Password, new { @class = "control-label" })
+        @Html.TextBoxFor(model => model.Password, new { @class = "form-control", @ValueType = "password" })
+        @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.Phone_number, new { @class = "control-label" })
+        @Html.TextBoxFor(model => model.Phone_number, new { @class = "form-control" })
+        @Html.ValidationMessageFor(model => model.Phone_number, "", new { @class = "text-danger" })
+    </div>
+
+
+
+    <!-- Add more form fields as needed -->
+
+    <div class="form-group">
+        <input type="submit" value="Create" class="btn btn-primary" />
+    </div>
+}*@
+
+@section Scripts {
+    @*@Scripts.Render("~/bundles/jqueryval")*@
+    <script>
+        $("#SexId).select({
+            theme: 'classic',
+            /*dropdownParent: $('#insertModal'),*/
+            dropdownParent: $('#insertAddlineModal'),
+        });
+
+
+
+        function ClearOff() {
+            $('#select-sex').val('');
+        }
+
+
+
+        function SaveOfficer(){
+            Sex = $('#select-sex').val();
+
+            if (Sex == "") {
+                swal({
+                    title: "กรุณาเลือกเพศ",
+                    icon: "error",
+                    button: "ตกลง"
+                })
+                return false
+            }
+
+            $.ajax({
+                url: '/Officer/SaveOfficer',
+                //data: {
+                //    id: id,
+                //    UserID: emp2,
+                //    Fname: empname,
+                //    Agency: agency,
+                //    Position: position,
+                //    ID_AD: AD,
+                //    DocNo: DocNo,
+
+                //},
+                type: 'POST',
+                dataType: 'JSON',
+                success: function (res) {
+                    console.log(res.data)
+                    if (res.success) {
+                        swal({
+                            title: "สำเร็จ!",
+                            text: res.message,
+                            icon: "success",
+                            button: "ตกลง",
+                        });
+
+                        itemTable.ajax.reload();
+                        Clearemp();
+
+                    } else {
+                        swal({
+                            title: "บันทึกไม่สำเร็จ!",
+                            text: res.message,
+                            icon: "error",
+                            button: "ตกลง",
+                        });
+                    }
+                },
+                failure: function (response) {
+                    swal({
+                        title: "ไม่สำเร็จ!",
+                        text: "กรุณากรอกใหม่อีกครั้ง",
+                        icon: "error",
+                        button: "ตกลง",
+                    });
+                }
+            })
+        }
+
+
+    </script>
+}

@@ -1,0 +1,135 @@
+﻿@{
+
+    @model IEnumerable<Officer>
+}
+
+@{
+    ViewBag.Title = "เจ้าหน้าที่ผู้ดูแลระบบ";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .edit-icon {
+        color: blue;
+        text-decoration: none;
+    }
+
+    .add-button {
+        background-color: #5DADE2; /* Set the background color */
+        border: none; /* Remove the border */
+        color: white; /* Set the text color */
+        padding: 10px 20px; /* Add padding around the button text */
+        text-align: center; /* Center align the text */
+        text-decoration: none; /* Remove text underline */
+        display: inline-block; /* Display as an inline element */
+        font-size: 16px; /* Set the font size */
+        cursor: pointer; /* Add a pointer cursor on hover */
+        border-radius: 4px; /* Add rounded corners */
+    }
+
+        .add-button:hover {
+            background-color: #5DADE2; /* Change the background color on hover */
+        }
+
+</style>
+
+<br />
+<h3 class="text-center"></h3>
+<div class="row">
+    <div class="col-md-12">
+        <div>
+            <a class="add-button" asp-action="Create" asp-controller="Officer"><i class="bi bi-plus-circle"></i> เพิ่มเจ้าหน้าที่ผู้ดูแลระบบ</a>
+            <br />
+            <br />
+        </div> @*Button Add*@
+        <div class="table-responsive">
+            <table class="display table table-striped table-bordered" id="dataTable" style="width:100%">
+                <thead>
+                    <tr>
+                        <th class="text-center" width="5%">#</th>
+                        <th class="text-center" >Id</th>
+                        <th class="text-center" width="12%">Username</th>
+                        <th class="text-center" width="12%">ชื่อ</th>
+                        <th class ="text-center" width="12%">นามสกุล</th>
+                        <th class="text-center" width="10%">เพศ</th>
+                        <th class="text-center" width="15%">เบอร์โทรศัพท์</th>
+                        <th class ="text-center" width="12%">บทบาท</th>
+                        <th class="text-center" >Action</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+</div>
+
+@*Modal*@
+<div class="modal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Modal title</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Modal body text goes here.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div> @* End Modal*@
+
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('#dataTable').DataTable({
+                ajax: {
+                    url: '/Officer/GetAllData', // Specify the URL for fetching data
+                    type: 'GET', // Specify the HTTP method (GET, POST, etc.)
+                    dataType: 'json' // Specify the data type (json, xml, etc.)
+                },
+                columns: [
+                    { data: 'i' },
+                    { data: 'Id' },
+                    { data: 'Username' },
+                    { data: 'Name' },
+                    { data: 'Sirname' },
+                    { data: 'SexName' },
+                    { data: 'Phone' },
+                    { data: 'Role' },
+                    {
+                    data: null,
+                        render: function (data, type, row) {
+                            return '<button class="btn btn-primary" onclick="Edit(' + row.Id + ')"><i class="bi bi-pencil-square"></i> แก้ไข</button>' +
+                                    '&nbsp' + 
+                                    '<button class="btn btn-danger" asp-for="Id" onclick="Delete()"><i class="bi bi-trash"></i> ลบ</button>';
+                        }
+                    }
+                    
+                    
+                ],
+                columnDefs: [
+                    {
+                        targets: [1], // Indices of columns to hide (zero-based index)
+                        visible: false,
+                        searchable: false
+                    },
+                    {
+                        targets: [0,1,2,3,4,5,6,7,8],
+                        className: 'text-center'
+                    }
+                ]
+            });
+        });
+
+        function editRow(Id) {
+            console.log(Id);
+            
+        }
+
+
+    </script>
+}
