@@ -1,4 +1,8 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Fitness.Data;
+using Fitness.Helpers;
+using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
 
 namespace Fitness.Models
 {
@@ -9,5 +13,10 @@ namespace Fitness.Models
 
         [Required]
         public string Password { get; set;}
+
+
+
     }
+
+
 }

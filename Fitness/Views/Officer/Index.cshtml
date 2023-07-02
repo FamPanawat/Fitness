@@ -1,44 +1,37 @@
-﻿@{
-
-    @model IEnumerable<Officer>
+﻿@using Newtonsoft.Json;
+@{
+    var jsonData = ViewBag.JsonData;
+    var dataObject = JsonConvert.DeserializeObject<List<dynamic>>(jsonData);
 }
 
 @{
     ViewBag.Title = "เจ้าหน้าที่ผู้ดูแลระบบ";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
 <style>
-    .edit-icon {
-        color: blue;
-        text-decoration: none;
-    }
-
     .add-button {
-        background-color: #5DADE2; /* Set the background color */
-        border: none; /* Remove the border */
-        color: white; /* Set the text color */
-        padding: 10px 20px; /* Add padding around the button text */
-        text-align: center; /* Center align the text */
-        text-decoration: none; /* Remove text underline */
-        display: inline-block; /* Display as an inline element */
-        font-size: 16px; /* Set the font size */
-        cursor: pointer; /* Add a pointer cursor on hover */
-        border-radius: 4px; /* Add rounded corners */
+        background-color: #4CAF50; /* สีพื้นหลังของปุ่ม */
+        color: white; /* สีข้อความในปุ่ม */
+        padding: 10px 20px; /* ขนาดของปุ่ม */
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
     }
 
-        .add-button:hover {
-            background-color: #5DADE2; /* Change the background color on hover */
-        }
-
+    a {
+        text-decoration: none; /* ลบเส้นใต้ของลิงก์ */
+        color: inherit; /* ใช้สีข้อความเท่ากับสีที่กำหนดในตัวแปรแวดล้อม */
+    }
 </style>
+
 
 <br />
 <h3 class="text-center"></h3>
 <div class="row">
-    <div class="col-md-12">
+    <div class="col-md-12 card">
         <div>
-            <a class="add-button" asp-action="Create" asp-controller="Officer"><i class="bi bi-plus-circle"></i> เพิ่มเจ้าหน้าที่ผู้ดูแลระบบ</a>
+            <br />
+            <a class="btn" style="color: white; background-color: #4CAF50; padding: 10px 20px" asp-action="Create" asp-controller="Officer"><i class="fas fa-plus"></i> เพิ่มเจ้าหน้าที่ผู้ดูแลระบบ</a>
             <br />
             <br />
         </div> @*Button Add*@
@@ -47,88 +40,94 @@
                 <thead>
                     <tr>
                         <th class="text-center" width="5%">#</th>
-                        <th class="text-center" >Id</th>
-                        <th class="text-center" width="12%">Username</th>
+                        <th class="text-center" hidden>Id</th>
+                        <th class="text-center" width="12%">ชื่อผู้ใช้</th>
                         <th class="text-center" width="12%">ชื่อ</th>
-                        <th class ="text-center" width="12%">นามสกุล</th>
+                        <th class="text-center" width="12%">นามสกุล</th>
                         <th class="text-center" width="10%">เพศ</th>
                         <th class="text-center" width="15%">เบอร์โทรศัพท์</th>
                         <th class ="text-center" width="12%">บทบาท</th>
                         <th class="text-center" >Action</th>
                     </tr>
                 </thead>
+                <tbody>
+                    @{
+                        int i = 0;
+                    }
+                    @foreach (var item in dataObject)
+                    {
+                        i++;
+                        <tr>
+                            <td class="text-center">@i</td>
+                            <td class="text-center" hidden>@item.Id</td>
+                            <td class="text-center">@item.Username</td>
+                            <td class="text-center">@item.Firstname</td>
+                            <td class="text-center">@item.Surname</td>
+                            <td class="text-center">@item.SexName</td>
+                            <td class="text-center">@item.Phone</td>
+                            <td class="text-center">@item.Role</td>
+                            <td class="text-center">
+                                <a class="btn btn-warning" title="แก้ไข" onclick="GetEditOfficer(@item.Id)"><i class="fa fa-edit"></i> แก้ไข</a>
+                                &nbsp
+                                <button class='btn btn-danger btn-mini' data-toggle='tooltip' data-placement='top' title='ลบ' onclick='GetDeleteOfficer(@item.Id);' id='btnDeleteItem'><i class='bi bi-trash'></i> ลบ</button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
             </table>
         </div>
     </div>
 </div>
 
 @*Modal*@
-<div class="modal" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Modal title</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <p>Modal body text goes here.</p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Save changes</button>
-            </div>
-        </div>
-    </div>
-</div> @* End Modal*@
+
+@* End Modal*@
 
 
 @section Scripts {
     <script>
-        $(document).ready(function () {
-            $('#dataTable').DataTable({
-                ajax: {
-                    url: '/Officer/GetAllData', // Specify the URL for fetching data
-                    type: 'GET', // Specify the HTTP method (GET, POST, etc.)
-                    dataType: 'json' // Specify the data type (json, xml, etc.)
-                },
-                columns: [
-                    { data: 'i' },
-                    { data: 'Id' },
-                    { data: 'Username' },
-                    { data: 'Name' },
-                    { data: 'Sirname' },
-                    { data: 'SexName' },
-                    { data: 'Phone' },
-                    { data: 'Role' },
-                    {
-                    data: null,
-                        render: function (data, type, row) {
-                            return '<button class="btn btn-primary" onclick="Edit(' + row.Id + ')"><i class="bi bi-pencil-square"></i> แก้ไข</button>' +
-                                    '&nbsp' + 
-                                    '<button class="btn btn-danger" asp-for="Id" onclick="Delete()"><i class="bi bi-trash"></i> ลบ</button>';
-                        }
-                    }
-                    
-                    
-                ],
-                columnDefs: [
-                    {
-                        targets: [1], // Indices of columns to hide (zero-based index)
-                        visible: false,
-                        searchable: false
-                    },
-                    {
-                        targets: [0,1,2,3,4,5,6,7,8],
-                        className: 'text-center'
-                    }
-                ]
-            });
-        });
 
-        function editRow(Id) {
-            console.log(Id);
+        $(document).ready(function () {
+            var table = $('#dataTable').DataTable();
+
+            function GetEditOfficer(itemId) {
+                // ในตัวอย่างนี้เราใช้การ alert เพื่อแสดงรหัสไอเท็มที่คลิก คุณสามารถแก้ไขส่วนนี้ตามการใช้งานจริง
+                alert('คุณคลิกที่ปุ่มแก้ไขไอเท็มรหัส ' + itemId);
+            }
+
+            //$('#dataTable').DataTable({
+                //ajax: {
+                //    url: '/Officer/GetAllData', // Specify the URL for fetching data
+                //    type: 'GET', // Specify the HTTP method (GET, POST, etc.)
+                //    dataType: 'json' // Specify the data type (json, xml, etc.)
+                //},
+                //columns: [
+                //    { data: 'i' },
+                //    { data: 'Id' },
+                //    { data: 'Username' },
+                //    { data: 'Name' },
+                //    { data: 'Sirname' },
+                //    { data: 'SexName' },
+                //    { data: 'Phone' },
+                //    { data: 'Role' },
+                //    {
+                //        data: null,
+                //        render: function (data, type, row) {
+                //            let edit = "<button class='btn btn-warning btn-mini' data-toggle='tooltip' data-placement='top' title='แก้ไข' data-id-type='" + data + "' onclick ='GetEditOfficer(this);' id='btnEditItem'><i class='fa fa-edit'></i> แก้ไข</button> ";
+                //            let _delete = "<button class='btn btn-danger btn-mini' data-toggle='tooltip' data-placement='top' title='ลบ' data-id-type='" + data + "' onclick ='GetDeleteOfficer(this);' id='btnEditItem'><i class='bi bi-trash'></i> ลบ</button> ";
+                //            return edit + '&nbsp' + _delete;
+                //        }
+                //    }
+
+            //});
+
+
+
+
             
-        }
+
+
+        });
 
 
     </script>

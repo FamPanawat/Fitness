@@ -1,4 +1,5 @@
 ﻿using Fitness.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
@@ -20,6 +21,21 @@ namespace Fitness.Controllers
 
         public IActionResult Index()
         {
+            // ตรวจสอบว่าเป็นครั้งแรกที่โหลดหน้า view หรือไม่
+            int isFirstLoad = HttpContext.Session?.GetInt32("IsFirstLoad") ?? 1;
+            if (isFirstLoad == 1)
+            {
+                // เซ็ต Session เพื่อบอกว่าไม่ใช่ครั้งแรกแล้ว
+                HttpContext.Session.SetInt32("IsFirstLoad", 0);
+
+                // ส่งข้อความแจ้งเตือนไปยัง View
+                ViewBag.ShowAlert = true;
+            }
+            else
+            {
+                ViewBag.ShowAlert = false;
+            }
+
             return View();
         }
 

@@ -10,47 +10,80 @@
     @*Import*@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     <link rel="stylesheet" href="~/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/stylesheet.css" />
     <link rel="stylesheet" href="path/to/bootstrap-icons.css">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
 
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.12/dist/sweetalert2.all.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.12/dist/sweetalert2.min.css" rel="stylesheet">
+
 
 </head>
 <body>
+
     <header>
 
         @if (Context.Session.GetString("OfficerId") != null)
         {
-            <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+            string fullname = Context.Session.GetString("Fullname").ToString();
+            <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
                 <div class="container">
-                    <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Fitness</a>
-                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
+                    <a class="navbar-brand" href="#">Logo</a>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                         <span class="navbar-toggler-icon"></span>
                     </button>
-                    <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                        <ul class="navbar-nav flex-grow-1">
+                    <div class="collapse navbar-collapse" id="navbarNav">
+                        <ul class="navbar-nav">
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                                <a class="nav-link active" aria-current="page" asp-action="Index" asp-controller="Home">
+                                    <i class="bi bi-house-door-fill" style="color: white"></i>
+                                    หน้าหลัก &nbsp&nbsp
+                                </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                                <a class="nav-link" href="#">ยืม-คืน &nbsp&nbsp</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Officer" asp-action="Index">เจ้าหน้าที่</a>
+                                <a class="nav-link" href="#">จัดการอุปกรณ์ &nbsp&nbsp</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">จัดการสมาชิก &nbsp&nbsp</a>
+                            </li>
+
+                            @*Check Super Admin*@
+                            @if (Context.Session.GetString("Role").ToString() == "Super Admin")
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-action="Index" asp-controller="Officer">จัดการบุคลากร &nbsp&nbsp</a>
+                                </li>
+                            }
+
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    รายงาน
+                                </a>
+                                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    <li><a class="dropdown-item" href="#">โปรไฟล์</a></li>
+                                    <li><a class="dropdown-item" href="#">เปลี่ยนรหัสผ่าน</a></li>
+                                </ul>
                             </li>
                         </ul>
-                        <ul class="nav justify-content-end dropdown-menu">
+                    </div>
+                    <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+                        <ul class="navbar-nav">
                             <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">Dropdown</a>
-                                <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item" href="#">Action</a></li>
-                                    <li><a class="dropdown-item" href="#">Another action</a></li>
-                                    <li><a class="dropdown-item" href="#">Something else here</a></li>
-                                    <li><hr class="dropdown-divider"></li>
-                                    <li><a class="dropdown-item" href="#">Separated link</a></li>
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="bi bi-person-fill" style="color: white"></i> คุณ@{@fullname}
+                                </a>
+                                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    <li><a class="dropdown-item" href="#"><i class="bi bi-person-circle"></i> โปรไฟล์</a></li>
+                                    <li><a class="dropdown-item" href="#"><i class="bi bi-arrow-clockwise"></i> เปลี่ยนรหัสผ่าน</a></li>
                                 </ul>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-action="LogOutButton" asp-controller="Login">&nbsp&nbsp  <i class="bi bi-box-arrow-right" style="color: white"></i> ออกจากระบบ</a>
                             </li>
                         </ul>
                     </div>
@@ -59,25 +92,11 @@
         }
         else
         {
-            <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-                <div class="container">
-                    <a class="navbar-brand" asp-area="" asp-controller="Login" asp-action="Index">Fitness</a>
-                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                        <span class="navbar-toggler-icon"></span>
-                    </button>
-                    <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                        <ul class="navbar-nav flex-grow-1">
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Login" asp-action="Index">Home</a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </nav>
+            
         }
 
     </header>
+
  
     <div class="container">
         <main role="main" class="pb-3">
@@ -98,6 +117,8 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.min.css" />
+    <script src="~/js/script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
     @await RenderSectionAsync("Scripts", required: false)
 </body>

@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+https://go.microsoft.com/fwlink/?LinkID=208121.
+-->
+<Project>
+  <PropertyGroup>
+    <TimeStampOfAssociatedLegacyPublishXmlFile />
+    <_PublishTargetUrl>D:\FitnessManagementSystem\DeployFitness</_PublishTargetUrl>
+    <History>True|2023-06-22T15:36:39.7478709Z;True|2023-06-19T22:44:31.0989567+07:00;</History>
+    <LastFailureDetails />
+  </PropertyGroup>
+  <ItemGroup>
+    <DestinationConnectionStrings Include="ConnectionStr">
+      <Value>Data Source=DESKTOP-SKSJ9Q5\SQLEXPRESS%3bInitial Catalog=FitnessDB%3bPersist Security Info=True%3bUser ID=FitnessDB%3bPassword=1234</Value>
+    </DestinationConnectionStrings>
+  </ItemGroup>
+  <ItemGroup>
+    <EFMigrations Include="Fitness.Data.FitnessDBContext">
+      <Value>Data Source=DESKTOP-SKSJ9Q5\SQLEXPRESS%3bInitial Catalog=FitnessDB%3bPersist Security Info=True%3bUser ID=FitnessDB%3bPassword=1234</Value>
+    </EFMigrations>
+  </ItemGroup>
+</Project>

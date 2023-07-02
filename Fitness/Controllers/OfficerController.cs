@@ -5,12 +5,14 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
 using System.Reflection.PortableExecutable;
 using System.Security.Cryptography;
+using System.Security.Cryptography.Xml;
 
 namespace Fitness.Controllers
 {
@@ -23,6 +25,44 @@ namespace Fitness.Controllers
         }
         public IActionResult Index()
         {
+            var query =
+            from Officer in _db.Officer // ตารางที่ 1
+            join Sex in _db.Sex // ตารางที่ 2
+            on Officer.SexId equals Sex.SexId // เงื่อนไขในการเชื่อมตาราง
+            join Role in _db.Role
+            on Officer.RoleId equals Role.RoleId
+            select new
+            {
+                Id = Officer.Officer_Id,
+                Username = Officer.Username,
+                Firstname = Officer.Firstname,
+                Surname = Officer.Lastname,
+                Phone = Officer.Phone_number,
+                Role = Role.RoleName,
+                SexName = Sex.SexName,
+            };
+
+            int i = 0;
+            var OfficerList = new List<dynamic>();
+            foreach (var item in query)
+            {
+                dynamic obj = new ExpandoObject();
+                obj.i = ++i;
+                obj.Id = item.Id;
+                obj.Username = item.Username;
+                obj.Firstname = item.Firstname;
+                obj.Surname = item.Surname;
+                obj.Phone = item.Phone;
+                obj.Role = item.Role;
+                obj.SexName = item.SexName;
+                OfficerList.Add(obj);
+            }
+
+            //ViewBag.GetOfficerAllData = OfficerList.OrderByDescending(o => o.Id);
+            //ViewBag.GetOfficerAllData = JsonConvert.SerializeObject(OfficerList.OrderByDescending(o => o.Id));
+            var jsonData = JsonConvert.SerializeObject(OfficerList.OrderByDescending(o => o.Id));
+            ViewBag.JsonData = jsonData;
+
             return View();
         }
         public IActionResult Create()
@@ -91,6 +131,7 @@ namespace Fitness.Controllers
 
         public IActionResult GetAllData()
         {
+
             var query =
             from Officer in _db.Officer // ตารางที่ 1
             join Sex in _db.Sex // ตารางที่ 2
@@ -127,8 +168,7 @@ namespace Fitness.Controllers
             return Json(new { data = OfficerList.OrderBy(o => o.Id) });
         }
 
-        [HttpPost]
-        public JsonResult Edit([FromBody] Officer obj)
+        public JsonResult GetEditOfficer([FromBody] Officer obj)
         {
             Officer officer = new Officer();
             if(obj != null)
@@ -137,6 +177,18 @@ namespace Fitness.Controllers
             }
             return Json(officer);
         }
+
+        public IActionResult GetEditOfficer(Object Id)
+        {
+            IActionResult response = Unauthorized();
+
+            var dataOff = _db.Officer.Find(Id);
+
+            response = Ok(new { data = dataOff });
+            return response;
+        }
+
+
 
     }
 }

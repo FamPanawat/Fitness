@@ -1,0 +1,8 @@
+﻿.edit-icon {
+    color: blue;
+    text-decoration: none;
+}
+
+    .add-button:hover {
+        background-color: #5DADE2; /* Change the background color on hover */
+    }

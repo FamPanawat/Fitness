@@ -50,5 +50,7 @@ namespace Fitness.Helpers
             }
             return password;
         }
+
+        
     }
 }
