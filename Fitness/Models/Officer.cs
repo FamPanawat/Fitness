@@ -27,6 +27,8 @@ namespace Fitness.Models
         public DateTime CreateDate { get; set; }
         public int? RoleId { get; set; }
         public string CreateBy { get; set; }
+        public int Status { get; set; }
+
 
         public virtual Role Role { get; set; }
         public virtual Sex Sex { get; set; }

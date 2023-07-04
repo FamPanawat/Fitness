@@ -2,6 +2,9 @@
 @{
     var jsonData = ViewBag.JsonData;
     var dataObject = JsonConvert.DeserializeObject<List<dynamic>>(jsonData);
+
+
+    var EditOfficer = JsonConvert.DeserializeObject(ViewBag.EditOfficer);
 }
 
 @{
@@ -21,6 +24,83 @@
     a {
         text-decoration: none; /* ลบเส้นใต้ของลิงก์ */
         color: inherit; /* ใช้สีข้อความเท่ากับสีที่กำหนดในตัวแปรแวดล้อม */
+    }
+
+    .btn {
+        /* ปรับแต่งสีพื้นหลัง */
+        /*background-color: #ff9900;*/
+        /* ปรับแต่งสีตัวอักษร */
+        color: #ffffff;
+        /* ปรับแต่งขอบ */
+        /*border: 2px solid #ff9900;*/
+        /* ปรับแต่งระยะห่างของขอบ */
+        padding: 7px 14px;
+        /* ปรับแต่งรูปแบบตัวอักษร */
+        font-family: Arial, sans-serif;
+        font-size: 14px;
+        text-decoration: none;
+        /* เพิ่มเอฟเฟกต์เมื่อเม้าส์ไปวางบนปุ่ม */
+        transition: background-color 0.3s ease;
+    }
+
+        .btn:hover {
+            background-color: #ffffff;
+            color: #ff9900;
+        }
+
+    /* ปรับแต่งรูปแบบไอคอน */
+    .fa-edit {
+        /* ปรับขนาดไอคอน */
+        font-size: 14px;
+        /* ปรับตำแหน่งไอคอน */
+        margin-right: 5px;
+    }
+
+    /* ปรับแต่งรูปแบบไอคอน */
+    .bi-trash {
+        /* ปรับขนาดไอคอน */
+        font-size: 14px;
+        /* ปรับตำแหน่งไอคอน */
+        margin-right: 5px;
+    }
+
+    .waves-effect {
+        /* เพิ่มเอฟเฟกต์คลื่น */
+        position: relative;
+        overflow: hidden;
+        transform: translate3d(0, 0, 0);
+    }
+
+        .waves-effect:after {
+            /* สร้างส่วนผสานคลื่น */
+            content: "";
+            display: block;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.3);
+            opacity: 0;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+        }
+
+    .waves-light:hover .waves-effect:after {
+        /* ปรับเอฟเฟกต์คลื่นเมื่อเม้าส์ไปวาง */
+        width: 200%;
+        height: 200%;
+        opacity: 1;
+        transition: width 0.5s ease-out, height 0.5s ease-out, opacity 1s ease-out;
+    }
+
+    .bg-green {
+        background-color: green;
+    }
+
+    .bg-red {
+        background-color: red;
     }
 </style>
 
@@ -44,10 +124,11 @@
                         <th class="text-center" width="12%">ชื่อผู้ใช้</th>
                         <th class="text-center" width="12%">ชื่อ</th>
                         <th class="text-center" width="12%">นามสกุล</th>
-                        <th class="text-center" width="10%">เพศ</th>
-                        <th class="text-center" width="15%">เบอร์โทรศัพท์</th>
-                        <th class ="text-center" width="12%">บทบาท</th>
-                        <th class="text-center" >Action</th>
+                        <th class="text-center">เพศ</th>
+                        <th class="text-center">เบอร์โทรศัพท์</th>
+                        <th class="text-center">บทบาท</th>
+                        <th class="text-center">สถานะ</th>
+                        <th class="text-center">Action</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -66,10 +147,19 @@
                             <td class="text-center">@item.SexName</td>
                             <td class="text-center">@item.Phone</td>
                             <td class="text-center">@item.Role</td>
+                            @if (item.Status == 1)
+                            {
+                                <td class="text-center"><p class=" bg-success text-white">เปิดใช้งาน</p></td>
+                            }
+                            else
+                            {
+                                <td class="text-center"><p class=" bg-danger text-white">ปิดใช้งาน</p></td>
+                            }
                             <td class="text-center">
-                                <a class="btn btn-warning" title="แก้ไข" onclick="GetEditOfficer(@item.Id)"><i class="fa fa-edit"></i> แก้ไข</a>
+                                @*<a class="btn btn-warning waves-effect waves-light" title="แก้ไข" onclick="GetEditOfficer('@item.Id')"><i class="fa fa-edit"></i> แก้ไข</a>*@
+                                <a class="btn btn-warning waves-effect waves-light edit-officer" title="แก้ไข" data-id="@item.Id"><i class="fa fa-edit"></i> แก้ไข</a>
                                 &nbsp
-                                <button class='btn btn-danger btn-mini' data-toggle='tooltip' data-placement='top' title='ลบ' onclick='GetDeleteOfficer(@item.Id);' id='btnDeleteItem'><i class='bi bi-trash'></i> ลบ</button>
+                                <a class="btn btn-danger waves-effect waves-light" title="ลบ" onclick="GetDeleteOfficer('@item.Id')"><i class="bi bi-trash"></i> ลบ</a>
                             </td>
                         </tr>
                     }
@@ -80,6 +170,27 @@
 </div>
 
 @*Modal*@
+<!-- HTML Modal -->
+<div id="editModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <!-- เนื้อหาของ Modal จะถูกสร้างและแทรกผ่าน jQuery -->
+            <div class="modal-header">
+                แก้ไขข้อมูล
+            </div>
+
+            <label>TEST</label>
+            <input id="officerId" name="officerId"  />
+
+            <label>TEST</label>
+            <input id="Firstname" name="Firstname"  />
+
+            <div class="modal-footer">
+
+            </div>
+        </div>
+    </div>
+</div>
 
 @* End Modal*@
 
@@ -88,47 +199,54 @@
     <script>
 
         $(document).ready(function () {
-            var table = $('#dataTable').DataTable();
+            var table = $('#dataTable').DataTable({
+                dom: 'Bfrtip', // Add the button container to the DOM
+                buttons: [
+                    'csv', // Export as CSV
+                    'excel' // Export as Excel
+                ]
+            });
 
-            function GetEditOfficer(itemId) {
-                // ในตัวอย่างนี้เราใช้การ alert เพื่อแสดงรหัสไอเท็มที่คลิก คุณสามารถแก้ไขส่วนนี้ตามการใช้งานจริง
-                alert('คุณคลิกที่ปุ่มแก้ไขไอเท็มรหัส ' + itemId);
-            }
+            $(document).on('click', '.edit-officer', function () {
+                var officerId = $(this).data('id');
+                
+                $.ajax({
+                    url: '/Officer/GetDataOfficer', // URL ของ Action ที่ต้องการเรียกใน Controller
+                    type: 'GET',
+                    data: { officerId: officerId }, // ส่งพารามิเตอร์ officerId ไปยัง Controller
+                    success: function (response) {
+                        // การดำเนินการเมื่อคอนทรอลเลอร์ตอบกลับสำเร็จ
+                        console.log('สำเร็จ');
 
-            //$('#dataTable').DataTable({
-                //ajax: {
-                //    url: '/Officer/GetAllData', // Specify the URL for fetching data
-                //    type: 'GET', // Specify the HTTP method (GET, POST, etc.)
-                //    dataType: 'json' // Specify the data type (json, xml, etc.)
-                //},
-                //columns: [
-                //    { data: 'i' },
-                //    { data: 'Id' },
-                //    { data: 'Username' },
-                //    { data: 'Name' },
-                //    { data: 'Sirname' },
-                //    { data: 'SexName' },
-                //    { data: 'Phone' },
-                //    { data: 'Role' },
-                //    {
-                //        data: null,
-                //        render: function (data, type, row) {
-                //            let edit = "<button class='btn btn-warning btn-mini' data-toggle='tooltip' data-placement='top' title='แก้ไข' data-id-type='" + data + "' onclick ='GetEditOfficer(this);' id='btnEditItem'><i class='fa fa-edit'></i> แก้ไข</button> ";
-                //            let _delete = "<button class='btn btn-danger btn-mini' data-toggle='tooltip' data-placement='top' title='ลบ' data-id-type='" + data + "' onclick ='GetDeleteOfficer(this);' id='btnEditItem'><i class='bi bi-trash'></i> ลบ</button> ";
-                //            return edit + '&nbsp' + _delete;
-                //        }
-                //    }
+                        $("#officerId").val(response.data.Officer_Id);
+                        $("#Firstname").val(response.data.Firstname);
+                        console.log(response.data.Firstname)
+                        //$('#editModal .modal-content').html(modalContent);
+                        $('#editModal').modal('show');
+                    },
+                    error: function (xhr, status, error) {
+                        // การดำเนินการเมื่อเกิดข้อผิดพลาดในการเรียกคอนทรอลเลอร์
+                        console.error('เกิดข้อผิดพลาด');
+                        console.log(xhr.responseText);
+                    }
+                });
 
-            //});
+            });
 
-
-
-
-            
 
 
         });
 
+
+        function GetEditOfficer(id) {
+            alert('TEST ' + id)
+
+        }
+
+        function GetDeleteOfficer(id) {
+            alert('คุณคลิกที่ปุ่มลบไอเท็มรหัส ' + id);
+
+        }
 
     </script>
 }

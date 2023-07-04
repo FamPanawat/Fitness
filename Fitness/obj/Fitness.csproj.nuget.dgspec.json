@@ -1,31 +1,32 @@
 {
   "format": 1,
   "restore": {
-    "D:\\FitnessManagementSystem\\Fitness\\Fitness\\Fitness.csproj": {}
+    "D:\\Fam\\FitnessManagementSystem\\Fitness\\Fitness.csproj": {}
   },
   "projects": {
-    "D:\\FitnessManagementSystem\\Fitness\\Fitness\\Fitness.csproj": {
+    "D:\\Fam\\FitnessManagementSystem\\Fitness\\Fitness.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\FitnessManagementSystem\\Fitness\\Fitness\\Fitness.csproj",
+        "projectUniqueName": "D:\\Fam\\FitnessManagementSystem\\Fitness\\Fitness.csproj",
         "projectName": "Fitness",
-        "projectPath": "D:\\FitnessManagementSystem\\Fitness\\Fitness\\Fitness.csproj",
-        "packagesPath": "C:\\Users\\famre\\.nuget\\packages\\",
-        "outputPath": "D:\\FitnessManagementSystem\\Fitness\\Fitness\\obj\\",
+        "projectPath": "D:\\Fam\\FitnessManagementSystem\\Fitness\\Fitness.csproj",
+        "packagesPath": "C:\\Users\\panawat.c\\.nuget\\packages\\",
+        "outputPath": "D:\\Fam\\FitnessManagementSystem\\Fitness\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
-          "C:\\Program Files (x86)\\DevExpress 21.2\\Components\\Offline Packages"
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\famre\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\DevExpress 21.2.config",
+          "C:\\Users\\panawat.c\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\DevExpress 20.1.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
           "net5.0"
         ],
         "sources": {
-          "C:\\Program Files (x86)\\DevExpress 21.2\\Components\\System\\Components\\Packages": {},
+          "C:\\Program Files (x86)\\DevExpress 20.1\\Components\\System\\Components\\Packages": {},
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
@@ -80,8 +81,7 @@
             "net47",
             "net471",
             "net472",
-            "net48",
-            "net481"
+            "net48"
           ],
           "assetTargetFallback": true,
           "warn": true,
@@ -93,7 +93,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.103\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.408\\RuntimeIdentifierGraph.json"
         }
       }
     }

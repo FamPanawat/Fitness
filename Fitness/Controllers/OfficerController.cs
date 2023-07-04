@@ -40,6 +40,7 @@ namespace Fitness.Controllers
                 Phone = Officer.Phone_number,
                 Role = Role.RoleName,
                 SexName = Sex.SexName,
+                Status = Officer.Status
             };
 
             int i = 0;
@@ -55,12 +56,13 @@ namespace Fitness.Controllers
                 obj.Phone = item.Phone;
                 obj.Role = item.Role;
                 obj.SexName = item.SexName;
+                obj.Status = item.Status;
                 OfficerList.Add(obj);
             }
 
-            //ViewBag.GetOfficerAllData = OfficerList.OrderByDescending(o => o.Id);
-            //ViewBag.GetOfficerAllData = JsonConvert.SerializeObject(OfficerList.OrderByDescending(o => o.Id));
-            var jsonData = JsonConvert.SerializeObject(OfficerList.OrderByDescending(o => o.Id));
+            ViewBag.EditOfficer = JsonConvert.SerializeObject("0");
+
+            var jsonData = JsonConvert.SerializeObject(OfficerList.OrderBy(o => o.Id).OrderByDescending(c => c.Status));
             ViewBag.JsonData = jsonData;
 
             return View();
@@ -129,65 +131,26 @@ namespace Fitness.Controllers
             return View();
         }
 
-        public IActionResult GetAllData()
-        {
-
-            var query =
-            from Officer in _db.Officer // ตารางที่ 1
-            join Sex in _db.Sex // ตารางที่ 2
-            on Officer.SexId equals Sex.SexId // เงื่อนไขในการเชื่อมตาราง
-            join Role in _db.Role
-            on Officer.RoleId equals Role.RoleId
-            select new
-            {
-                Id = Officer.Officer_Id,
-                Username = Officer.Username,
-                Name = Officer.Firstname,
-                Sirname = Officer.Lastname,
-                Phone = Officer.Phone_number,
-                Role = Role.RoleName,
-                SexName = Sex.SexName,
-            };
-
-            int i = 0;
-            var OfficerList = new List<dynamic>();
-            foreach (var item in query)
-            {
-                dynamic obj = new ExpandoObject();
-                obj.i = ++i;
-                obj.Id = item.Id;
-                obj.Username = item.Username;
-                obj.Name = item.Name;
-                obj.Sirname = item.Sirname;
-                obj.Phone = item.Phone;
-                obj.Role = item.Role;
-                obj.SexName = item.SexName;
-                OfficerList.Add(obj);
-            }
-
-            return Json(new { data = OfficerList.OrderBy(o => o.Id) });
-        }
-
-        public JsonResult GetEditOfficer([FromBody] Officer obj)
-        {
-            Officer officer = new Officer();
-            if(obj != null)
-            {
-                officer = _db.Officer.Where(c => c.Officer_Id == obj.Officer_Id).FirstOrDefault();
-            }
-            return Json(officer);
-        }
-
-        public IActionResult GetEditOfficer(Object Id)
+        [HttpGet]
+        public IActionResult GetDataOfficer(string officerId)
         {
             IActionResult response = Unauthorized();
+            // ตัวอย่างการสร้างข้อมูลตาม ID ของเจ้าหน้าที่
+            var officer = _db.Officer.Where(c => c.Officer_Id == officerId).FirstOrDefault();
 
-            var dataOff = _db.Officer.Find(Id);
-
-            response = Ok(new { data = dataOff });
-            return response;
+            if (officer != null)
+            {
+                ViewBag.Firstname = officer.Firstname;
+                // ส่งข้อมูลกลับในรูปแบบ JSON
+                response = Ok(new { data = officer});
+                return response;
+            }
+            else
+            {
+                // ส่งข้อความผิดพลาดกลับ
+                return BadRequest("ไม่พบข้อมูลเจ้าหน้าที่");
+            }
         }
-
 
 
     }
